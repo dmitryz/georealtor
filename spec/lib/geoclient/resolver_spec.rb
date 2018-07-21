@@ -13,8 +13,8 @@ describe Geoclient::Resolver do
   describe "when Geoclient was called" do
     subject! { service.call("Checkpoint charly") }
 
-    it "returns estimation" do
-      is_expected.to be_a_kind_of Hash
+    it "returns location" do
+      is_expected.to be_a_kind_of Array
     end
   end
 end

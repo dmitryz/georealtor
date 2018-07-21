@@ -1,4 +1,5 @@
 require 'geoclient/errors'
+
 module Geoclient
   module Adapters
     class GeoService
@@ -12,6 +13,7 @@ module Geoclient
 
       def initialize(settings = GeoService.default_settings)
         @settings = settings
+        @address = address
       end
 
       def locate(address)
@@ -25,6 +27,7 @@ module Geoclient
       end
 
     private
+
       def send_request(method, query)
         connection.get do |request|
           request.headers["Content-Type"] = "application/json"
@@ -35,7 +38,10 @@ module Geoclient
       def validate_result!(response)
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
-        body = JSON.parse(response.body)
+        hash = JSON.parse(response.body)
+        raise Geocoder::Error, "Not found formatted address" unless hash.dig(:data, :formatted_address)
+        raise Geocoder::Error, "Not found formatted address" unless hash.dig(:data, :formatted_address, :address_components)
+        hash
       end
 
       def connection
