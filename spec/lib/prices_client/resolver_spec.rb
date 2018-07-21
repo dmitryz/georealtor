@@ -6,9 +6,12 @@ require 'prices_client/resolver'
 ADDRESS_ID = '80969793-feec-45f6-9cb4-922068d7e2af'
 FIXT_BASE_PATH = 'spec/fixtures/prices_client/'
 
+# rubocop:disable Metrics/BlockLength
 describe PricesClient::Resolver do
   let(:service) { described_class.new(adapter: price_service_adapter) }
-  let(:price_service_adapter) { instance_double(PricesClient::Adapters::PriceService) }
+  let(:price_service_adapter) do
+    instance_double(PricesClient::Adapters::PriceService)
+  end
 
   [%w[house sell city],
    %w[house sell zip_code],
@@ -39,3 +42,4 @@ describe PricesClient::Resolver do
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

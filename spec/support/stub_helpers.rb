@@ -10,7 +10,13 @@ module StubHelpers
 
   def build_params(marketing_type, property_type, type)
     address_id = ADDRESS_IDS[type]
-    "id=#{address_id}&marketing_type=#{marketing_type}&property_type=#{property_type}&type=#{type}"
+    hash = {}.tap do |data|
+      data['id'] = address_id
+      data['marketing_type'] = marketing_type
+      data['property_type'] = property_type
+      data['type'] = type
+    end
+    hash.to_query
   end
 
   def stub_geo_service_request
@@ -38,7 +44,9 @@ module StubHelpers
 
   def stub_price_request(marketing_type, property_type, type)
     params = build_params(marketing_type, property_type, type)
-    body = File.read("#{PC_BASE_PATH}/#{property_type}_#{marketing_type}_#{type}_b3e770f9.json")
+    path = "#{PC_BASE_PATH}/#{property_type}_#{marketing_type}_#{type}"
+    path += '_b3e770f9.json'
+    body = File.read(path)
     stub_request(:get, "#{PRICE_SERVICE_URL}?#{params}")
       .to_return(status: 200,
                  body: body,
