@@ -14,7 +14,7 @@ describe Geoclient::Resolver do
     subject! { service.call("Checkpoint charly") }
 
     it "returns location" do
-      is_expected.to be_a_kind_of Array
+      is_expected.to be_a_kind_of OpenStruct
     end
   end
 end

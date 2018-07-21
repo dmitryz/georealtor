@@ -40,7 +40,10 @@ module PricesClient
       def validate_result!(response)
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
-        JSON.parse(response.body)
+        hash = JSON.parse(response.body)
+        raise PricesClient::Error, "Not found attributes address" unless hash.dig('data', 'attributes')
+        raise PricesClient::Error, "Not found price" unless hash.dig('data', 'attributes', 'price')
+        hash
       end
 
       def connection

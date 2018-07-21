@@ -13,7 +13,6 @@ module Geoclient
 
       def initialize(settings = GeoService.default_settings)
         @settings = settings
-        @address = address
       end
 
       def locate(address)
@@ -39,8 +38,8 @@ module Geoclient
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
-        raise Geocoder::Error, "Not found formatted address" unless hash.dig(:data, :formatted_address)
-        raise Geocoder::Error, "Not found formatted address" unless hash.dig(:data, :formatted_address, :address_components)
+        raise Geocoder::Error, "Not found formatted address" unless hash.dig('data', 'formatted_address')
+        raise Geocoder::Error, "Not found address component" unless hash.dig('data', 'address_components')
         hash
       end
 

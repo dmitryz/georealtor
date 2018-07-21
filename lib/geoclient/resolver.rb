@@ -8,16 +8,20 @@ module Geoclient
 
     def call(address)
       data = adapter.locate(address)
-      get_components(data)
+      OpenStruct.new(formatted_address: get_address(data), address_components: get_components(data))
     end
 
   private
+    def get_address(data)
+      data['data']['formatted_address']
+    end
+
     def get_components(data)
         address_components = data['data']['address_components'].dup
         address_components.reject! { |hash| hash['id'].nil? }
-        address_components.map { |hash| OpenStruct.new(id: hash['id'], type: hash['type']) }
+        address_components.map { |hash| OpenStruct.new(id: hash['id'], type: hash['type'], name: hash['short_name']) }
     end
 
-    attr_reader :adapter, :data
+    attr_reader :adapter
   end
 end

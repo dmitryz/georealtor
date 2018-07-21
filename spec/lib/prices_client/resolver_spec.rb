@@ -36,7 +36,7 @@ describe PricesClient::Resolver do
                              ) }
 
       it "returns estimation" do
-        is_expected.to be_a_kind_of Hash
+        is_expected.to be_a_kind_of Float
       end
     end
   end
