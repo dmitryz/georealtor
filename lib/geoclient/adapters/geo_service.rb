@@ -38,8 +38,9 @@ module Geoclient
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
-        raise Geocoder::Error, "Not found formatted address" unless hash.dig('data', 'formatted_address')
-        raise Geocoder::Error, "Not found address component" unless hash.dig('data', 'address_components')
+        raise Geoclient::ApiError, hash['errors'].join(", ") if hash['errors']
+        raise Geoclient::Error, "Not found formatted address" unless hash.dig('data', 'formatted_address')
+        raise Geoclient::Error, "Not found address component" unless hash.dig('data', 'address_components')
         hash
       end
 
