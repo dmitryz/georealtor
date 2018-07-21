@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'prices_client/errors'
 
 module PricesClient
@@ -23,16 +25,17 @@ module PricesClient
                      property_type: property_type }
           response = send_request(params)
         rescue Faraday::Error::ConnectionFailed => e
-          raise Geoclient::ConnectionError, "Connection failed"
+          raise Geoclient::ConnectionError, 'Connection failed'
         end
         data = validate_result!(response)
         data
       end
 
-    private
+      private
+
       def send_request(params)
         connection.get do |request|
-          request.headers["Content-Type"] = "application/json"
+          request.headers['Content-Type'] = 'application/json'
           request.params = params
         end
       end
@@ -41,8 +44,8 @@ module PricesClient
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
-        raise PricesClient::Error, "Not found attributes address" unless hash.dig('data', 'attributes')
-        raise PricesClient::Error, "Not found price" unless hash.dig('data', 'attributes', 'price')
+        raise PricesClient::Error, 'Not found attributes address' unless hash.dig('data', 'attributes')
+        raise PricesClient::Error, 'Not found price' unless hash.dig('data', 'attributes', 'price')
         hash
       end
 

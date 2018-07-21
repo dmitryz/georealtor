@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# BaseService
 module BaseService
   extend ActiveSupport::Concern
 

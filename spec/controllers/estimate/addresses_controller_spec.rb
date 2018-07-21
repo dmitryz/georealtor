@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'geoclient/resolver'
 require 'prices_client/resolver'
 
-GEO_SERVICE_URL = "http://geoclient.com/geo"
-PRICE_SERVICE_URL = "http://geoprice.com/price"
-ES_BASE_PATH = "spec/fixtures/estimate/"
-GC_BASE_PATH = "spec/fixtures/geoclient/"
+GEO_SERVICE_URL = 'http://geoclient.com/geo'
+PRICE_SERVICE_URL = 'http://geoprice.com/price'
+ES_BASE_PATH = 'spec/fixtures/estimate/'
+GC_BASE_PATH = 'spec/fixtures/geoclient/'
 
 describe Estimate::AddressesController do
   let(:geoclient_checkpoint_charly) { File.read("#{GC_BASE_PATH}/geo_service_checkpoint_charly.json") }
@@ -18,12 +20,12 @@ describe Estimate::AddressesController do
     PricesClient::Adapters::PriceService.url = PRICE_SERVICE_URL
   end
 
-  describe "when address is real" do
+  describe 'when address is real' do
     before do
       stub_geo_service_request
     end
 
-    describe "and all prices were found" do
+    describe 'and all prices were found' do
       before do
         stub_price_request('sell', 'house',     'city')
         stub_price_request('sell', 'apartment', 'city')
@@ -35,16 +37,16 @@ describe Estimate::AddressesController do
         stub_price_request('rent', 'apartment', 'zip_code')
       end
 
-      it "should estimate the prices" do
+      it 'should estimate the prices' do
         process :search, method: :get, params: { query: 'Checkpoint charly' }
         expect(JSON.parse(response.body)).to eq(estimate_address_success)
         expect(response.response_code).to eq(200)
       end
     end
 
-    describe "and at least one price was found" do
+    describe 'and at least one price was found' do
       before do
-        stub_price_request('sell', 'house',     'city')
+        stub_price_request('sell', 'house', 'city')
         stub_price_request_error('sell', 'apartment', 'city')
         stub_price_request_error('rent', 'house',     'city')
         stub_price_request_error('rent', 'apartment', 'city')
@@ -54,14 +56,14 @@ describe Estimate::AddressesController do
         stub_price_request_error('rent', 'apartment', 'zip_code')
       end
 
-      it "should estimate the prices" do
+      it 'should estimate the prices' do
         process :search, method: :get, params: { query: 'Checkpoint charly' }
         expect(JSON.parse(response.body)).to eq(one_price_estimate_address_success)
         expect(response.response_code).to eq(200)
       end
     end
 
-    describe "and no any price were found" do
+    describe 'and no any price were found' do
       before do
         stub_price_request_error('sell', 'house',     'city')
         stub_price_request_error('sell', 'apartment', 'city')
@@ -73,24 +75,23 @@ describe Estimate::AddressesController do
         stub_price_request_error('rent', 'apartment', 'zip_code')
       end
 
-      it "should return error" do
+      it 'should return error' do
         process :search, method: :get, params: { query: 'Checkpoint charly' }
-        expect(JSON.parse(response.body)).to eq({"error" => "No any price were found"})
+        expect(JSON.parse(response.body)).to eq('error' => 'No any price were found')
         expect(response.response_code).to eq(422)
       end
     end
   end
 
-  describe "when address not found" do
+  describe 'when address not found' do
     before do
-      stub_geo_service_request_error("BBBBBBBB")
+      stub_geo_service_request_error('BBBBBBBB')
     end
 
-    it "should return error" do
+    it 'should return error' do
       process :search, method: :get, params: { query: 'BBBBBBBB' }
-      expect(JSON.parse(response.body)).to eq({"errors" => "Something went wrong"})
+      expect(JSON.parse(response.body)).to eq('errors' => 'Something went wrong')
       expect(response.response_code).to eq(422)
     end
   end
 end
-

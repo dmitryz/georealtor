@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 require 'geoclient/resolver'
 
@@ -10,10 +12,10 @@ describe Geoclient::Resolver do
     allow(geo_service_adapter).to receive(:locate).and_return(geoclient_checkpoint_charly)
   end
 
-  describe "when Geoclient was called" do
-    subject! { service.call("Checkpoint charly") }
+  describe 'when Geoclient was called' do
+    subject! { service.call('Checkpoint charly') }
 
-    it "returns location" do
+    it 'returns location' do
       is_expected.to be_a_kind_of OpenStruct
     end
   end

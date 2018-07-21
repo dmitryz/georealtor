@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'geoclient/errors'
 
 module Geoclient
@@ -19,17 +21,17 @@ module Geoclient
         begin
           response = send_request('address', address)
         rescue Faraday::Error::ConnectionFailed => e
-          raise Geoclient::ConnectionError, "Connection failed"
+          raise Geoclient::ConnectionError, 'Connection failed'
         end
         data = validate_result!(response)
         data
       end
 
-    private
+      private
 
       def send_request(method, query)
         connection.get do |request|
-          request.headers["Content-Type"] = "application/json"
+          request.headers['Content-Type'] = 'application/json'
           request.params[method] = query
         end
       end
@@ -38,9 +40,9 @@ module Geoclient
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
-        raise Geoclient::ApiError, hash['errors'].join(", ") if hash['errors']
-        raise Geoclient::Error, "Not found formatted address" unless hash.dig('data', 'formatted_address')
-        raise Geoclient::Error, "Not found address component" unless hash.dig('data', 'address_components')
+        raise Geoclient::ApiError, hash['errors'].join(', ') if hash['errors']
+        raise Geoclient::Error, 'Not found formatted address' unless hash.dig('data', 'formatted_address')
+        raise Geoclient::Error, 'Not found address component' unless hash.dig('data', 'address_components')
         hash
       end
 

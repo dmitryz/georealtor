@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'prices_client/adapters/price_service'
 
 module PricesClient
@@ -11,7 +13,8 @@ module PricesClient
       get_price(data)
     end
 
-  private
+    private
+
     def get_price(data)
       data['data']['attributes']['price'].to_f
     end

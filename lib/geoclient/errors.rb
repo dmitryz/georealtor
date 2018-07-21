@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'geoclient/adapters/geo_service'
 
 module Geoclient

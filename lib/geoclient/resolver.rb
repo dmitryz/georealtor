@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'geoclient/adapters/geo_service'
 
 module Geoclient
@@ -11,15 +13,16 @@ module Geoclient
       OpenStruct.new(formatted_address: get_address(data), address_components: get_components(data))
     end
 
-  private
+    private
+
     def get_address(data)
       data['data']['formatted_address']
     end
 
     def get_components(data)
-        address_components = data['data']['address_components'].dup
-        address_components.reject! { |hash| hash['id'].nil? }
-        address_components.map { |hash| OpenStruct.new(id: hash['id'], type: hash['type'], name: hash['short_name']) }
+      address_components = data['data']['address_components'].dup
+      address_components.reject! { |hash| hash['id'].nil? }
+      address_components.map { |hash| OpenStruct.new(id: hash['id'], type: hash['type'], name: hash['short_name']) }
     end
 
     attr_reader :adapter

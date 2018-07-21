@@ -15,8 +15,11 @@
   ```
   $ ./bin/rspec
   ```
-1. `cp .env.example .env`
-   `cp .env.example .env.test.local`
+1.
+   ```
+   cp .env.example .env
+   cp .env.example .env.test.local
+   ```
 1. Or just run (rspec/rubocop, bundle install):
   `make`
 1. Define environment variables:
