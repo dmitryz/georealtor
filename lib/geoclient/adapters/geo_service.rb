@@ -4,6 +4,7 @@ require 'geoclient/errors'
 
 module Geoclient
   module Adapters
+    # GeoService
     class GeoService
       class << self
         attr_accessor :url
@@ -20,7 +21,7 @@ module Geoclient
       def locate(address)
         begin
           response = send_request('address', address)
-        rescue Faraday::Error::ConnectionFailed => e
+        rescue Faraday::Error::ConnectionFailed
           raise Geoclient::ConnectionError, 'Connection failed'
         end
         data = validate_result!(response)
@@ -36,6 +37,7 @@ module Geoclient
         end
       end
 
+      # rubocop:disable Metrics/AbcSize, Metrics/LineLength
       def validate_result!(response)
         raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
@@ -45,6 +47,7 @@ module Geoclient
         raise Geoclient::Error, 'Not found address component' unless hash.dig('data', 'address_components')
         hash
       end
+      # rubocop:enable Metrics/AbcSize, Metrics/LineLength
 
       def connection
         @connection ||= Faraday.new(url: @settings.url)

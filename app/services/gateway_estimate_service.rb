@@ -13,6 +13,7 @@ class GatewayEstimateService
     @geoclient = Geoclient::Resolver.new
   end
 
+  # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
   def call
     geo_data = geoclient.call(address)
     result = { address: geo_data.formatted_address }
@@ -21,7 +22,6 @@ class GatewayEstimateService
     geo_data.address_components.each do |address|
       sales = PriceService.call(address.id, address.type)
       rent = RentService.call(address.id, address.type)
-
       next if sales.empty? && rent.empty?
 
       result[address.type] = {}.tap do |data|
@@ -33,10 +33,10 @@ class GatewayEstimateService
       end
       prices_count += 1
     end
-
-    raise GatewayNoAnyPrice if prices_count == 0
+    raise GatewayNoAnyPrice if prices_count.zero?
     result
   end
+  # rubocop:enable Metrics/MethodLength, Metrics/AbcSize
 
   private
 

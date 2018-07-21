@@ -9,11 +9,18 @@ PRICE_SERVICE_URL = 'http://geoprice.com/price'
 ES_BASE_PATH = 'spec/fixtures/estimate/'
 GC_BASE_PATH = 'spec/fixtures/geoclient/'
 
+# rubocop:disable Metrics/BlockLength
 describe Estimate::AddressesController do
-  let(:geoclient_checkpoint_charly) { File.read("#{GC_BASE_PATH}/geo_service_checkpoint_charly.json") }
+  let(:geoclient_checkpoint_charly) do
+    File.read("#{GC_BASE_PATH}/geo_service_checkpoint_charly.json")
+  end
   let(:geoclient_error) { File.read("#{GC_BASE_PATH}/error.json") }
-  let(:estimate_address_success) { JSON.parse(File.read("#{ES_BASE_PATH}/success.json")) }
-  let(:one_price_estimate_address_success) { JSON.parse(File.read("#{ES_BASE_PATH}/one_price_success.json")) }
+  let(:estimate_address_success) do
+    JSON.parse(File.read("#{ES_BASE_PATH}/success.json"))
+  end
+  let(:one_price_estimate_address_success) do
+    JSON.parse(File.read("#{ES_BASE_PATH}/one_price_success.json"))
+  end
 
   before do
     Geoclient::Adapters::GeoService.url = GEO_SERVICE_URL
@@ -58,7 +65,9 @@ describe Estimate::AddressesController do
 
       it 'should estimate the prices' do
         process :search, method: :get, params: { query: 'Checkpoint charly' }
-        expect(JSON.parse(response.body)).to eq(one_price_estimate_address_success)
+        json_body = JSON.parse(response.body)
+        expect(json_body).to eq(one_price_estimate_address_success)
+
         expect(response.response_code).to eq(200)
       end
     end
@@ -77,7 +86,9 @@ describe Estimate::AddressesController do
 
       it 'should return error' do
         process :search, method: :get, params: { query: 'Checkpoint charly' }
-        expect(JSON.parse(response.body)).to eq('error' => 'No any price were found')
+        error = { 'error' => 'No any price were found' }
+        expect(JSON.parse(response.body)).to eq(error)
+
         expect(response.response_code).to eq(422)
       end
     end
@@ -90,8 +101,11 @@ describe Estimate::AddressesController do
 
     it 'should return error' do
       process :search, method: :get, params: { query: 'BBBBBBBB' }
-      expect(JSON.parse(response.body)).to eq('errors' => 'Something went wrong')
+      error = { 'errors' => 'Something went wrong' }
+      expect(JSON.parse(response.body)).to eq(error)
+
       expect(response.response_code).to eq(422)
     end
   end
 end
+# rubocop:enable Metrics/BlockLength

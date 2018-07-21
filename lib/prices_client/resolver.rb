@@ -3,13 +3,17 @@
 require 'prices_client/adapters/price_service'
 
 module PricesClient
+  # Price resolver
   class Resolver
     def initialize(adapter: PricesClient::Adapters::PriceService.new)
       @adapter = adapter
     end
 
     def call(type:, id:, marketing_type:, property_type:)
-      data = adapter.estimate(type: type, id: id, marketing_type: marketing_type, property_type: property_type)
+      data = adapter.estimate(type: type,
+                              id: id,
+                              marketing_type: marketing_type,
+                              property_type: property_type)
       get_price(data)
     end
 
