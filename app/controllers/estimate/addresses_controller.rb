@@ -1,5 +1,8 @@
 class Estimate::AddressesController < ApplicationController
   def search
-    render json: GatewayEstimateService.call(params[:query]).as_json
+    hash = Rails.cache.fetch('posts/'+params[:query]) do
+      GatewayEstimateService.call(params[:query])
+    end
+    render json: hash.as_json
   end
 end
