@@ -45,7 +45,7 @@ module PricesClient
 
       # rubocop:disable Metrics/LineLength
       def validate_result!(response)
-        raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
+        raise PricesClient::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
         raise PricesClient::Error, 'Not found attributes address' unless hash.dig('data', 'attributes')

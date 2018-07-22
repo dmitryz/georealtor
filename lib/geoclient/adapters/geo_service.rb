@@ -39,7 +39,7 @@ module Geoclient
 
       # rubocop:disable Metrics/AbcSize, Metrics/LineLength
       def validate_result!(response)
-        raise Geocoder::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
+        raise Geoclient::Error, "#{response.status}: #{response.reason_phrase}" unless response.status == 200
 
         hash = JSON.parse(response.body)
         raise Geoclient::ApiError, hash['errors'].join(', ') if hash['errors']
